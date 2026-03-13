@@ -8,6 +8,22 @@ using System.Collections.Generic;
 using System;
 
 namespace SvgX {
+
+    public enum HorizontalTextAnchor {
+        Start,
+        Middle,
+        End
+    }
+
+    public enum VerticalTextAnchor {
+        NominalHeight,
+        Ascent,
+        Gravity,
+        Midway,
+        Baseline,
+        Descent
+    }
+
     public class Svg {
 
         private readonly StringBuilder _sb;
@@ -18,21 +34,6 @@ namespace SvgX {
         private Dictionary<string, FontMetrics> _fontMetrics;
 
         public static bool DarkMode { get; set; } = true;
-
-        public enum HorizontalTextAnchor {
-            Start,
-            Middle,
-            End
-        }
-
-        public enum VerticalTextAnchor {
-            NominalHeight,
-            Ascent,
-            Gravity,
-            Midway,
-            Baseline,
-            Descent
-        }
 
         public Svg(int xLeft, int yTop, int xRight, int yBottom) {
             _sb = new();
@@ -398,64 +399,64 @@ namespace SvgX {
             RGB rgb = ColorConverter.OkhslToRgb(hue, Math.Pow(saturation, 1.25), DarkMode ? luminosityDarkLightMode : 1 - luminosityDarkLightMode);
             return Color.FromArgb(255, rgb.R, rgb.G, rgb.B);
         }
+    }
 
 
-        public class FontMetrics {
+    public class FontMetrics {
 
-            /// <summary>
-            /// The vertical position of the most positive estention above the baseline.
-            /// </summary>
-            public double Ascent { get; private set; }
+        /// <summary>
+        /// The vertical position of the most positive estention above the baseline.
+        /// </summary>
+        public double Ascent { get; private set; }
 
-            /// <summary>
-            /// The vertical position of the most negative estention below the baseline. Value is negative!
-            /// </summary>
-            public double Descent { get; private set; }
+        /// <summary>
+        /// The vertical position of the most negative estention below the baseline. Value is negative!
+        /// </summary>
+        public double Descent { get; private set; }
 
-            /// <summary>
-            /// The actual height of the glyphs (ascent - descent).
-            /// </summary>
-            public double ActualHeight { get; private set; }
+        /// <summary>
+        /// The actual height of the glyphs (ascent - descent).
+        /// </summary>
+        public double ActualHeight { get; private set; }
 
-            /// <summary>
-            /// The nominal height of the glyphs (roughly but not exactly ActualHeight).
-            /// </summary>
-            public double NominalHeight { get; private set; }
+        /// <summary>
+        /// The nominal height of the glyphs (roughly but not exactly ActualHeight).
+        /// </summary>
+        public double NominalHeight { get; private set; }
 
-            /// <summary>
-            /// The vertical position of the midway (half between ascent & descent) relative to the baseline.
-            /// </summary>
-            public double Midway { get; private set; }
+        /// <summary>
+        /// The vertical position of the midway (half between ascent & descent) relative to the baseline.
+        /// </summary>
+        public double Midway { get; private set; }
 
-            /// <summary>
-            /// The vertical position of the gravity center relative to the baseline.
-            /// </summary>
-            public double GravityCenter { get; private set; }
+        /// <summary>
+        /// The vertical position of the gravity center relative to the baseline.
+        /// </summary>
+        public double GravityCenter { get; private set; }
 
-            //public FontMetrics(string fontBaseName, double size) {
-            //    switch (fontBaseName) {
-            //        case "Exo 2": // characterized 2026-02-28 rAiner Gruber
-            //            Ascent = .717 * size;
-            //            Descent = -.205 * size;
-            //            ActualHeight = Ascent - Descent;
-            //            NominalHeight = size;
-            //            //Midway = .256 * size;
-            //            Midway = (Ascent + Descent) / 2;
-            //            GravityCenter = .3152 * size;
-            //            break;
-            //        default:
-            //            throw new ArgumentException($"Font '{fontBaseName}' is not defined in FontMetrics. Run TypographyAnalyzer to get these.");
-            //    }
-            //}
+        //public FontMetrics(string fontBaseName, double size) {
+        //    switch (fontBaseName) {
+        //        case "Exo 2": // characterized 2026-02-28 rAiner Gruber
+        //            Ascent = .717 * size;
+        //            Descent = -.205 * size;
+        //            ActualHeight = Ascent - Descent;
+        //            NominalHeight = size;
+        //            //Midway = .256 * size;
+        //            Midway = (Ascent + Descent) / 2;
+        //            GravityCenter = .3152 * size;
+        //            break;
+        //        default:
+        //            throw new ArgumentException($"Font '{fontBaseName}' is not defined in FontMetrics. Run TypographyAnalyzer to get these.");
+        //    }
+        //}
 
-            public FontMetrics(double ascent, double descent, double gravityCenter) {
-                Ascent = ascent;
-                Descent = descent;
-                ActualHeight = ascent - descent;
-                NominalHeight = 1;
-                Midway = (ascent + descent) / 2;
-                GravityCenter = gravityCenter;
-            }
+        public FontMetrics(double ascent, double descent, double gravityCenter) {
+            Ascent = ascent;
+            Descent = descent;
+            ActualHeight = ascent - descent;
+            NominalHeight = 1;
+            Midway = (ascent + descent) / 2;
+            GravityCenter = gravityCenter;
         }
     }
 
@@ -487,16 +488,16 @@ namespace SvgX {
 
             // Pre-defined constants for Okhsl geometry
             // These approximate the 'maximum' saturation for a given lightness
-            double L = l;
-            double C = s * GetMaxChroma(L, a_, b_);
+            double ll = l;
+            double cc = s * GetMaxChroma(ll, a_, b_);
 
-            double a = C * a_;
-            double b = C * b_;
+            double a = cc * a_;
+            double b = cc * b_;
 
             // Step 1: Oklab to LMS
-            double l_ = L + 0.3963377774 * a + 0.2158037573 * b;
-            double m_ = L - 0.1055613458 * a - 0.0638541728 * b;
-            double s_ = L - 0.0894841775 * a - 1.2914855480 * b;
+            double l_ = ll + 0.3963377774 * a + 0.2158037573 * b;
+            double m_ = ll - 0.1055613458 * a - 0.0638541728 * b;
+            double s_ = ll - 0.0894841775 * a - 1.2914855480 * b;
 
             // Step 2: LMS to Linear RGB
             double l3 = l_ * l_ * l_;
@@ -556,10 +557,10 @@ namespace SvgX {
         }
 
         // Simplification for the 'Max Chroma' to keep UI colors within gamut
-        private static double GetMaxChroma(double L, double a, double b) {
+        private static double GetMaxChroma(double l, double a, double b) {
             // This is a simplified boundary; a true implementation involves 
             // solving for the gamut intersection, but 0.4 is a safe 'vivid' limit.
-            return 0.4 * (1.0 - Math.Abs(2.0 * L - 1.0));
+            return 0.4 * (1.0 - Math.Abs(2.0 * l - 1.0));
         }
     }
 }
