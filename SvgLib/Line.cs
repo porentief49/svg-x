@@ -1,33 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Text;
-using System.Xml.Linq;
 
 namespace SvgLib {
-
-    public partial class SvgX {
-
-        private List<ElementBase> _elements = [];
-        public Canvas Canvas = new();
-
-        public void AddElement(ElementBase element) {
-            _elements.Add(element);
-        }
-
-        public string Serialize() {
-            string header = $"<svg width=`{Canvas.Width}` height=`{Canvas.Height:0.##}` xmlns=`http://www.w3.org/2000/svg`>";
-            string body = string.Join(Environment.NewLine, _elements.Select(e => $"    {e.Serialize(Canvas)}"));
-            string footer = $"</svg>";
-            return ($"{header}\r\n{body}\r\n{footer}").Replace('`', '"');
-        }
-
-        public void ExportToPdf(string path) {
-
-
-        }
-    }
-
     public class Line : ElementBase {
 
         private bool _xRel = false;
@@ -94,31 +69,4 @@ namespace SvgLib {
             return sb.ToString();
         }
     }
-
-    public struct ColorHtml {
-
-        public string Value;
-
-        public static implicit operator ColorHtml(string value) => new ColorHtml { Value = value };
-        public static implicit operator ColorHtml(Color value) => new ColorHtml { Value = ColorTranslator.ToHtml(value) };
-        public static implicit operator ColorHtml(int value) => new ColorHtml { Value = $"#{value:X6}" };
-    }
-
-    public abstract class ElementBase {
-        public abstract string Serialize(Canvas canvas);
-    }
-
-    public class Canvas {
-        public double Xleft { get; set; } = 0;
-        public double YTop { get; set; } = 0;
-        public double XRight { get; set; } = 100;
-        public double YBottom { get; set; } = 100;
-
-        public double Width => Math.Abs(XRight - Xleft);
-        public double Height => Math.Abs(YTop - YBottom);
-
-        public double CalcX(double x) => (x - Xleft) * Math.Sign(XRight - Xleft);
-        public double CalcY(double y) => (y - YTop) * Math.Sign(YBottom - YTop);
-    }
 }
-
