@@ -7,7 +7,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System;
 
-namespace SvgX {
+namespace SvgLib {
 
     public enum HorizontalTextAnchor {
         Start,
