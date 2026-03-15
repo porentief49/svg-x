@@ -89,6 +89,17 @@ namespace SvgX {
         //}
 
         public void ExportToPdf(string filePath) {
+
+            float widthInches = 210 / 25.4f; // 8.5f;
+            float heightInches = 297 / 25.4f; // 11f;
+
+            // Define your target DPI
+            float targetDpi = 25.4f;
+            float defaultDpi = 72f;
+
+            float pdfWidth = widthInches * defaultDpi;
+            float pdfHeight = heightInches * defaultDpi;
+
             using var stream = File.OpenWrite(filePath);
 
             // Create a memory stream with the SVG string
@@ -104,7 +115,10 @@ namespace SvgX {
             }
 
             using var pdfDocument = SKDocument.CreatePdf(stream);
-            using var pdfCanvas = pdfDocument.BeginPage(_width, _height);
+            //using var pdfCanvas = pdfDocument.BeginPage(_width, _height);
+            using var pdfCanvas = pdfDocument.BeginPage(pdfWidth, pdfHeight);
+            float scale = defaultDpi / targetDpi;
+            pdfCanvas.Scale(scale);
             pdfCanvas.DrawPicture(skSvg.Picture);
             pdfDocument.EndPage();
             pdfDocument.Close();
