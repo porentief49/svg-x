@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace SvgX {
+
     public class SvgNew {
 
         private List<ElementBase> _elements = [];

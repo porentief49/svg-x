@@ -2,6 +2,7 @@
 using System.Text;
 
 namespace SvgX {
+
     public class Rectangle : ElementBase {
 
         private bool _xxIsRelative = true;
@@ -45,6 +46,8 @@ namespace SvgX {
             }
         }
 
+        public double? CornerRadius { get; set; } = null;
+
         public double StrokeWidth { get; set; } = 1;
 
         public ColorHtml? StrokeColor { get; set; } = null;
@@ -58,11 +61,9 @@ namespace SvgX {
             sb.Append($"y=`{Math.Min(canvas.PosY(Y1), canvas.PosY(Y2)):0.##}` ");
             sb.Append($"width=`{Math.Abs(Width):0.##}` ");
             sb.Append($"height=`{Math.Abs(Height):0.##}` ");
-            if (StrokeColor.HasValue) {
-                sb.Append($"stroke=`{StrokeColor.Value.Value}` ");
-                sb.Append($"stroke-width=`{StrokeWidth:0.##}` ");
-            }
-            if (FillColor.HasValue) sb.Append($"fill=`{FillColor.Value.Value}` ");
+            if (StrokeColor.HasValue) sb.Append($"stroke=`{StrokeColor.Value.Value}` stroke-width=`{StrokeWidth:0.##}` ");
+            if (CornerRadius.HasValue) sb.Append($"rx=`{CornerRadius.Value:0.##}` ry=`{CornerRadius.Value:0.##}` ");
+            sb.Append($"fill=`{FillColor?.Value ?? "none"}` ");
             sb.Append($"/>");
             return sb.ToString();
         }

@@ -1,6 +1,7 @@
 ﻿using System.Text;
 
 namespace SvgX {
+
     public class Line : ElementBase {
 
         private bool _xxIsRelative = true;
